@@ -15,8 +15,8 @@
        
     </head>
     <body class="">
-    <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+    <div>
+        @yield('content')
+    </div>
     </body>
 </html>
