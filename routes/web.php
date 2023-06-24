@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\VerifyBvn;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,20 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::middleware('auth')->get('/', function () {
     return view('dashboard');
 });
+
+Route::post('/', [VerifyBvn::class, 'verify_bvn']);
+
 Route::get('register', function () {
     return view('auth.register');
 });
 
-Route::post('register', 'AuthController@register');
+Route::post('register', [AuthController::class, 'register']);
 
 
 Route::get('login', function () {
     return view('auth.login');
-});
+})->name('login');
 
-Route::post('login', 'AuthController@login');
+Route::post('login', [AuthController::class, 'login']);
 
-Route::post('logout', 'AuthController@logout');
+Route::get('logout', [AuthController::class, 'logout']);

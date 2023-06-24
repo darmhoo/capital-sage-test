@@ -11,18 +11,19 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     //
-    public function register(){
+    public function register()
+    {
         $this->validate(request(), [
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|confirmed'
         ]);
-        
+
         $user = User::create(request(['name', 'email', 'password']));
-        
+
         auth()->login($user);
-        
-        return redirect()->to('/dashboard');
+
+        return redirect()->to('/');
     }
 
     public function login(Request $request): RedirectResponse
@@ -32,19 +33,22 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        if (Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([
-            'email' => 'THe provided credentials do not match our records.',
+            'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
 
-    public function logout(){
+    public function logout(Request $request): RedirectResponse
+    {
         auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->to('/login');
     }
 }
